@@ -12,7 +12,7 @@ if wezterm.config_builder then
 end
 
 -- shell
-config.default_prog = { '/usr/bin/fish' }
+config.default_prog = { '/usr/bin/zsh' }
 -- config.default_cwd = 'D:\\projects'
 
 -- window configuration
@@ -28,7 +28,7 @@ config.window_padding = {
 config.show_new_tab_button_in_tab_bar = false
 config.use_fancy_tab_bar = false
 config.show_tabs_in_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true 
+config.hide_tab_bar_if_only_one_tab = true
 config.tab_max_width = 30
 config.tab_bar_at_bottom = true
 
@@ -143,7 +143,7 @@ config.color_scheme = 'Gruvbox Dark (Gogh)'
 
 
 -- font
-config.font = wezterm.font 'Rec Mono Duotone'
+config.font = wezterm.font 'Fantasque Sans Mono'
 config.font_size = 13
 
 -- keybindings 

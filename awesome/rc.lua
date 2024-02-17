@@ -26,6 +26,7 @@ local volume_widget = require("awesome-wm-widgets.pactl-widget.volume")
 local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
+local brightness_widget = require("awesome-wm-widgets.brightness-widget.brightness")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -41,7 +42,7 @@ end)
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "/mytheme/init.lua")
 
 -- This is used later as the default terminal and editor to run.
 local terminal = "wezterm"
@@ -112,6 +113,8 @@ screen.connect_signal("request::wallpaper", function(s)
 				image = beautiful.wallpaper,
 				upscale = true,
 				downscale = true,
+				horizontal_fit_policy = "fit",
+				vertical_fit_policy = "fit",
 				widget = wibox.widget.imagebox,
 			},
 			valign = "center",
@@ -131,9 +134,23 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 
+local text_tags = { terminal = "terminal", web = "web", slack = "slack", spotify = "spotify" }
+
+local tags = {
+	"terminal",
+	"web",
+	"slack",
+	"spotify",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+}
+
 screen.connect_signal("request::desktop_decoration", function(s)
 	-- Each screen has its own tag table.
-	awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+	awful.tag(tags, s, awful.layout.layouts[1])
 
 	-- Create a promptbox for each screen
 	s.mypromptbox = awful.widget.prompt()
@@ -268,15 +285,18 @@ screen.connect_signal("request::desktop_decoration", function(s)
 				volume_widget({
 					widget_type = "arc",
 				}),
-				wibox.widget.textbox("    "),
+				wibox.widget.textbox(" "),
+				brightness_widget({
+					program = "brightnessctl",
+				}),
+				wibox.widget.textbox(" "),
 				batteryarc_widget(),
-				wibox.widget.textbox("    "),
+				wibox.widget.textbox(" "),
 				mykeyboardlayout,
-				wibox.widget.textbox("    "),
 				mytextclock,
-				wibox.widget.textbox("    "),
+				wibox.widget.textbox(" "),
 				wibox.widget.systray(),
-				wibox.widget.textbox("    "),
+				wibox.widget.textbox(" "),
 				logout_menu_widget(),
 			},
 		},
@@ -352,6 +372,14 @@ awful.keyboard.append_global_keybindings({
 	awful.key({}, "XF86AudioPrev", function()
 		awful.util.spawn("playerctl previous", false)
 	end),
+
+	-- brightness
+	awful.key({}, "XF86MonBrightnessUp", function()
+		brightness_widget:inc()
+	end, { description = "increase brightness", group = "custom" }),
+	awful.key({}, "XF86MonBrightnessDown", function()
+		brightness_widget:dec()
+	end, { description = "decrease brightness", group = "custom" }),
 
 	-- print key
 	awful.key({}, "Print", function()
@@ -635,19 +663,19 @@ ruled.client.connect_signal("request::rules", function()
 	-- Set Firefox to always map on the tag named "2" on screen 1.
 	ruled.client.append_rule({
 		rule = { class = "firefox" },
-		properties = { screen = 1, tag = "2", floating = false },
+		properties = { screen = 1, tag = text_tags.web, floating = false },
 	})
 
 	-- Set slack to open in tag 3
 	ruled.client.append_rule({
 		rule = { class = "Slack" },
-		properties = { screen = 1, tag = "3", floating = false },
+		properties = { screen = 1, tag = text_tags.slack, floating = false },
 	})
 
 	-- set spotify to open in tag 4
 	ruled.client.append_rule({
 		rule = { class = "spotify" },
-		properties = { screen = 1, tag = "4", floating = false },
+		properties = { screen = 1, tag = text_tags.spotify, floating = false },
 	})
 end)
 -- }}}
@@ -670,12 +698,6 @@ naughty.connect_signal("request::display", function(n)
 end)
 
 -- }}}
-
--- add gaps
-beautiful.useless_gap = 3
-
--- define font
-beautiful.font = "Fantasque Sans Mono 11"
 
 -- require custom modules
 require("autostart")

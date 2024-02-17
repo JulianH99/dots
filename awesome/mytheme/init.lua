@@ -21,7 +21,7 @@ theme.bg_systray = theme.bg_normal
 
 theme.fg_normal = "#a89984"
 theme.fg_focus = "#fbf1c7"
-theme.fg_urgent = "#928374"
+theme.fg_urgent = "#fbf1c7"
 theme.fg_minimize = "#cc241d"
 
 theme.useless_gap = dpi(3)
@@ -48,9 +48,10 @@ theme.taglist_fg_occupied = "#d5c4a1"
 --theme.taglist_bg_focus = "#ff0000"
 
 -- Generate taglist squares:
-local taglist_square_size = dpi(3)
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
+-- local taglist_square_size = dpi(3)
+-- theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
+-- theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
+theme.taglist_spacing = dpi(3)
 
 -- Variables set for theming notifications:
 -- notification_font

@@ -1,18 +1,13 @@
-local wezterm = require 'wezterm'
-
-
-local SLANT_LEFT = wezterm.nerdfonts.ple_upper_left_triangle
-local SLANT_RIGHT = wezterm.nerdfonts.ple_lower_right_triangle
-
+local wezterm = require("wezterm")
 
 local config = wezterm.config_builder()
 
 if wezterm.config_builder then
-  config = wezterm.config_builder()
+	config = wezterm.config_builder()
 end
 
 -- shell
-config.default_prog = { '/usr/bin/zsh' }
+config.default_prog = { "/usr/bin/zsh" }
 -- config.default_cwd = 'D:\\projects'
 
 -- window configuration
@@ -21,9 +16,8 @@ config.window_padding = {
 	left = 0,
 	right = 0,
 	top = 0,
-	bottom = 0
+	bottom = 0,
 }
-
 
 config.show_new_tab_button_in_tab_bar = false
 config.use_fancy_tab_bar = false
@@ -33,15 +27,15 @@ config.tab_max_width = 30
 config.tab_bar_at_bottom = true
 
 local c = {
-	bg = '#282828',
-	bg0 = '#1d2021',
-	bg4 = '#7c6f64',
-	bg3 = '#32302f',
-	bg2 = '#504945',
-	fg1 = '#ebdbb2',
-	fg0 = '#fbf1c7',
-	gray = '#7c6f64',
-	lightfg = '#3c3836'
+	bg = "#282828",
+	bg0 = "#1d2021",
+	bg4 = "#7c6f64",
+	bg3 = "#32302f",
+	bg2 = "#504945",
+	fg1 = "#ebdbb2",
+	fg0 = "#fbf1c7",
+	gray = "#7c6f64",
+	lightfg = "#3c3836",
 }
 
 config.colors = {
@@ -71,100 +65,79 @@ config.colors = {
 			bg_color = c.lightfg,
 			fg_color = c.fg0,
 		},
-	}
+	},
 }
 
-
-function tab_title(tab_info)
-  local title = tab_info.tab_title
-  -- if the tab title is explicitly set, take that
-  if title and #title > 0 then
-    return title
-  end
-  -- Otherwise, use the title from the active pane
-  -- in that tab
-  return tab_info.active_pane.title
+local function tab_title(tab_info)
+	local title = tab_info.tab_title
+	-- if the tab title is explicitly set, take that
+	if title and #title > 0 then
+		return title
+	end
+	-- Otherwise, use the title from the active pane
+	-- in that tab
+	return tab_info.active_pane.title
 end
 
+wezterm.on("format-tab-title", function(tab, tabs, panes, _config, hover, max_width)
+	local title = tab_title(tab)
+	local tab_number = tab.tab_index + 1
 
-wezterm.on(
-  'format-tab-title',
-  function(tab, tabs, panes, config, hover, max_width)
-    local title = tab_title(tab)
-		local tab_number = tab.tab_index + 1
+	title = wezterm.truncate_right(tab_number .. ": " .. title .. " ", max_width - 2)
 
-
-		title = wezterm.truncate_right(tab_number .. ': ' .. title .. ' ', max_width - 2)
-
-
-
-		if tab.is_active then
-
-			return {
-				-- { Background = {Color= c.bg} },
-				{ Foreground = {Color = c.bg3} },
-				{ Text = SLANT_LEFT },
-				{ Text = ' '},
-				-- { Background = {Color = colors.bg } },
-				{ Foreground = {Color = c.fg0 } },
-				{ Text = title },
-
-				-- { Background = {Color = c.bg4 } },
-				{ Foreground = { Color = c.bg3 } },
-				
-				{ Text = SLANT_RIGHT }
-
-			}
-		end
-
-
-		
-
-
+	if tab.is_active then
 		return {
-			-- { Background = {Color= c.lightfg} },
-			{ Foreground = {Color = c.bg3} },
-			{ Text = SLANT_LEFT },
-			-- { Background = {Color = colors.bg4 } },
-			{ Foreground = {Color = c.fg0 } },
+			-- { Background = {Color= c.bg} },
+			{ Foreground = { Color = c.bg3 } },
+			{ Text = " " },
+			-- { Background = {Color = colors.bg } },
+			{ Foreground = { Color = c.fg0 } },
 			{ Text = title },
 
 			-- { Background = {Color = c.bg4 } },
 			{ Foreground = { Color = c.bg3 } },
-			{ Text = SLANT_RIGHT }
-
+			{ Text = " " },
 		}
-  end
-)
+	end
 
+	return {
+		-- { Background = {Color= c.lightfg} },
+		{ Foreground = { Color = c.bg3 } },
+		{ Text = " " },
+		-- { Background = {Color = colors.bg4 } },
+		{ Foreground = { Color = c.fg0 } },
+		{ Text = title },
+
+		-- { Background = {Color = c.bg4 } },
+		{ Foreground = { Color = c.bg3 } },
+		{ Text = " " },
+	}
+end)
 
 -- color scheme
-config.color_scheme = 'Gruvbox Dark (Gogh)'
-
+config.color_scheme = "Gruvbox Dark (Gogh)"
 
 -- font
-config.font = wezterm.font 'Fantasque Sans Mono'
+config.font = wezterm.font("Fantasque Sans Mono")
 config.font_size = 13
 
--- keybindings 
-config.keys = { 
+-- keybindings
+config.keys = {
 	{
-		key = 'w',
-		mods = 'ALT|CTRL',
-		action = wezterm.action.CloseCurrentPane { confirm = false }
+		key = "w",
+		mods = "ALT|CTRL",
+		action = wezterm.action.CloseCurrentPane({ confirm = false }),
 	},
 	{
-		key = '-',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain'}
+		key = "-",
+		mods = "CTRL|ALT",
+		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
 	},
 	{
-		key = '=',
-		mods = 'CTRL|ALT',
-		action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain'}
-	}
+		key = "=",
+		mods = "CTRL|ALT",
+		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+	},
 }
 
-
 return config
-

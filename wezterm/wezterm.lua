@@ -116,10 +116,24 @@ end)
 
 -- color scheme
 config.color_scheme = "Gruvbox Dark (Gogh)"
+-- config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "kanagawabones"
 
 -- font
-config.font = wezterm.font("Fantasque Sans Mono")
-config.font_size = 13
+-- config.font = wezterm.font 'RecMonoDuotone NF'
+local font_features = { "liga=1", "dlig=1" }
+config.font = wezterm.font_with_fallback({ family = "Monaspace Neon", harfbuzz_features = font_features })
+-- config.font = wezterm.font("Fantasque Sans Mono")
+
+config.font_rules = {
+	{
+		italic = true,
+		font = wezterm.font("Monaspace Radon", { italic = true }),
+	},
+}
+
+config.font_size = 14
+
 
 -- keybindings
 config.keys = {
